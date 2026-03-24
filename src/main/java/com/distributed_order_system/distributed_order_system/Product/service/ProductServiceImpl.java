@@ -1,8 +1,11 @@
 package com.distributed_order_system.distributed_order_system.Product.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.distributed_order_system.distributed_order_system.Product.dto.ProductDTO;
 import com.distributed_order_system.distributed_order_system.Product.entity.Product;
+import com.distributed_order_system.distributed_order_system.Product.mapper.ProductMapper;
 import com.distributed_order_system.distributed_order_system.Product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,24 +15,27 @@ import jakarta.persistence.EntityNotFoundException;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
-    public Product create(Product product) {
-        return productRepository.save(product);
+    public ProductDTO create(ProductDTO productDTO) {
+        Product product = productMapper.productDTOToProduct(productDTO);
+        return productMapper.productToProductDTO(productRepository.save(product));
     }
 
     @Override
-    public Product update(Long id, Product product) {
+    public ProductDTO update(Long id, ProductDTO productDTO) {
         Product existing = productRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Product not found"));
-        existing.setName(product.getName());
-        existing.setPrice(product.getPrice());
-        existing.setAvailableQuantity(product.getAvailableQuantity());
-        return productRepository.save(existing);
+        existing.setName(productDTO.getName());
+        existing.setPrice(productDTO.getPrice());
+        existing.setAvailableQuantity(productDTO.getAvailableQuantity());
+        return productMapper.productToProductDTO(productRepository.save(existing));
     }
 
     @Override
@@ -38,13 +44,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getById(Long id) {
+    public ProductDTO getById(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .map(productMapper::productToProductDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAll() {
+        return productRepository.findAll().stream()
+                .map(productMapper::productToProductDTO)
+                .collect(Collectors.toList());
     }
 }

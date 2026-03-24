@@ -1,14 +1,14 @@
 package com.distributed_order_system.distributed_order_system.Order.service;
 
+import com.distributed_order_system.distributed_order_system.Order.dto.OrderCreateRequest;
+import com.distributed_order_system.distributed_order_system.Order.dto.OrderResponse;
+
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Order.entity.Order;
-
 public interface OrderService {
-    Order create(Order order);
-    Order update(Long id, Order order);
+    OrderResponse create(OrderCreateRequest orderCreateRequest, Long userId);
     void delete(Long id);
-    Order getById(Long id);
-    List<Order> getAll();
-    List<Order> getByUserId(Long userId);
+    OrderResponse getById(Long id);
+    List<OrderResponse> getAll();
+    List<OrderResponse> getByUserId(Long userId);
 }

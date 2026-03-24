@@ -1,36 +1,42 @@
 package com.distributed_order_system.distributed_order_system.Payment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.distributed_order_system.distributed_order_system.Order.entity.Order;
+import com.distributed_order_system.distributed_order_system.Order.repository.OrderRepository;
+import com.distributed_order_system.distributed_order_system.Payment.dto.PaymentRequest;
+import com.distributed_order_system.distributed_order_system.Payment.dto.PaymentResponse;
 import com.distributed_order_system.distributed_order_system.Payment.entity.Payment;
+import com.distributed_order_system.distributed_order_system.Payment.mapper.PaymentMapper;
 import com.distributed_order_system.distributed_order_system.Payment.repository.PaymentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
-
-    public PaymentServiceImpl(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
+    private final OrderRepository orderRepository;
+    private final PaymentMapper paymentMapper;
 
     @Override
-    public Payment create(Payment payment) {
-        return paymentRepository.save(payment);
-    }
+    public PaymentResponse create(PaymentRequest paymentRequest) {
+        Order order = orderRepository.findById(paymentRequest.getOrderId())
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-    @Override
-    public Payment update(Long id, Payment payment) {
-        Payment existing = paymentRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
-        existing.setAmount(payment.getAmount());
-        existing.setStatus(payment.getStatus());
-        existing.setPaymentMethod(payment.getPaymentMethod());
-        existing.setTransactionTime(payment.getTransactionTime());
-        return paymentRepository.save(existing);
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setAmount(paymentRequest.getAmount());
+        payment.setPaymentMethod(paymentRequest.getPaymentMethod());
+        payment.setStatus("COMPLETED"); // Default status for simulation
+        payment.setTransactionTime(LocalDateTime.now());
+
+        return paymentMapper.paymentToPaymentResponse(paymentRepository.save(payment));
     }
 
     @Override
@@ -39,19 +45,23 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment getById(Long id) {
+    public PaymentResponse getById(Long id) {
         return paymentRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
+                .map(paymentMapper::paymentToPaymentResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found"));
     }
 
     @Override
-    public List<Payment> getAll() {
-        return paymentRepository.findAll();
+    public List<PaymentResponse> getAll() {
+        return paymentRepository.findAll().stream()
+                .map(paymentMapper::paymentToPaymentResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Payment getByOrderId(Long orderId) {
+    public PaymentResponse getByOrderId(Long orderId) {
         return paymentRepository.findByOrderId(orderId)
-            .orElseThrow(() -> new EntityNotFoundException("Payment not found for order"));
+                .map(paymentMapper::paymentToPaymentResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Payment not found for order"));
     }
 }

@@ -1,14 +1,14 @@
 package com.distributed_order_system.distributed_order_system.Notification.service;
 
+import com.distributed_order_system.distributed_order_system.Notification.dto.NotificationRequest;
+import com.distributed_order_system.distributed_order_system.Notification.dto.NotificationResponse;
+
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Notification.entity.Notification;
-
 public interface NotificationService {
-    Notification create(Notification notification);
-    Notification update(Long id, Notification notification);
+    NotificationResponse create(NotificationRequest notificationRequest);
     void delete(Long id);
-    Notification getById(Long id);
-    List<Notification> getAll();
-    List<Notification> getByUserId(Long userId);
+    NotificationResponse getById(Long id);
+    List<NotificationResponse> getAll();
+    List<NotificationResponse> getByUserId(Long userId);
 }

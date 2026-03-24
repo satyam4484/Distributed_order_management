@@ -1,30 +1,30 @@
 package com.distributed_order_system.distributed_order_system.User.controller;
 
-import java.util.List;
-
-import com.distributed_order_system.distributed_order_system.User.entity.User;
+import com.distributed_order_system.distributed_order_system.User.dto.UserCreateRequest;
+import com.distributed_order_system.distributed_order_system.User.dto.UserResponse;
+import com.distributed_order_system.distributed_order_system.User.dto.UserUpdateRequest;
 import com.distributed_order_system.distributed_order_system.User.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-        return ResponseEntity.ok(userService.create(user));
+    public ResponseEntity<UserResponse> create(@RequestBody UserCreateRequest userCreateRequest) {
+        return ResponseEntity.ok(userService.create(userCreateRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.update(id, user));
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+        return ResponseEntity.ok(userService.update(id, userUpdateRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -34,12 +34,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
 }

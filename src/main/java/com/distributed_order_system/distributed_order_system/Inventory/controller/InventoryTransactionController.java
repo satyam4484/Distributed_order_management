@@ -2,30 +2,25 @@ package com.distributed_order_system.distributed_order_system.Inventory.controll
 
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Inventory.entity.InventoryTransaction;
+import com.distributed_order_system.distributed_order_system.Inventory.dto.InventoryRequest;
+import com.distributed_order_system.distributed_order_system.Inventory.dto.InventoryResponse;
 import com.distributed_order_system.distributed_order_system.Inventory.service.InventoryTransactionService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/inventory")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class InventoryTransactionController {
 
     private final InventoryTransactionService service;
 
-
     @PostMapping
-    public ResponseEntity<InventoryTransaction> create(@RequestBody InventoryTransaction t) {
-        return ResponseEntity.ok(service.create(t));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<InventoryTransaction> update(@PathVariable Long id, @RequestBody InventoryTransaction t) {
-        return ResponseEntity.ok(service.update(id, t));
+    public ResponseEntity<InventoryResponse> create(@RequestBody InventoryRequest inventoryRequest) {
+        return ResponseEntity.ok(service.create(inventoryRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -35,17 +30,17 @@ public class InventoryTransactionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryTransaction> getById(@PathVariable Long id) {
+    public ResponseEntity<InventoryResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<InventoryTransaction>> getAll() {
+    public ResponseEntity<List<InventoryResponse>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<InventoryTransaction>> getByProduct(@PathVariable Long productId) {
+    public ResponseEntity<List<InventoryResponse>> getByProduct(@PathVariable Long productId) {
         return ResponseEntity.ok(service.getByProductId(productId));
     }
 }

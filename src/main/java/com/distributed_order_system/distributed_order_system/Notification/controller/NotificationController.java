@@ -2,31 +2,25 @@ package com.distributed_order_system.distributed_order_system.Notification.contr
 
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Notification.entity.Notification;
+import com.distributed_order_system.distributed_order_system.Notification.dto.NotificationRequest;
+import com.distributed_order_system.distributed_order_system.Notification.dto.NotificationResponse;
 import com.distributed_order_system.distributed_order_system.Notification.service.NotificationService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
 
-    
-
     @PostMapping
-    public ResponseEntity<Notification> create(@RequestBody Notification notification) {
-        return ResponseEntity.ok(notificationService.create(notification));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Notification> update(@PathVariable Long id, @RequestBody Notification notification) {
-        return ResponseEntity.ok(notificationService.update(id, notification));
+    public ResponseEntity<NotificationResponse> create(@RequestBody NotificationRequest notificationRequest) {
+        return ResponseEntity.ok(notificationService.create(notificationRequest));
     }
 
     @DeleteMapping("/{id}")
@@ -36,17 +30,17 @@ public class NotificationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Notification> getById(@PathVariable Long id) {
+    public ResponseEntity<NotificationResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(notificationService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getAll() {
+    public ResponseEntity<List<NotificationResponse>> getAll() {
         return ResponseEntity.ok(notificationService.getAll());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Notification>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<NotificationResponse>> getByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(notificationService.getByUserId(userId));
     }
 }

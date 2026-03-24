@@ -1,14 +1,14 @@
 package com.distributed_order_system.distributed_order_system.Payment.service;
 
+import com.distributed_order_system.distributed_order_system.Payment.dto.PaymentRequest;
+import com.distributed_order_system.distributed_order_system.Payment.dto.PaymentResponse;
+
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Payment.entity.Payment;
-
 public interface PaymentService {
-    Payment create(Payment payment);
-    Payment update(Long id, Payment payment);
+    PaymentResponse create(PaymentRequest paymentRequest);
     void delete(Long id);
-    Payment getById(Long id);
-    List<Payment> getAll();
-    Payment getByOrderId(Long orderId);
+    PaymentResponse getById(Long id);
+    List<PaymentResponse> getAll();
+    PaymentResponse getByOrderId(Long orderId);
 }

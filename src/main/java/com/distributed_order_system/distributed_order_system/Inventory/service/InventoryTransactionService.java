@@ -1,14 +1,14 @@
 package com.distributed_order_system.distributed_order_system.Inventory.service;
 
+import com.distributed_order_system.distributed_order_system.Inventory.dto.InventoryRequest;
+import com.distributed_order_system.distributed_order_system.Inventory.dto.InventoryResponse;
+
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Inventory.entity.InventoryTransaction;
-
 public interface InventoryTransactionService {
-    InventoryTransaction create(InventoryTransaction t);
-    InventoryTransaction update(Long id, InventoryTransaction t);
+    InventoryResponse create(InventoryRequest inventoryRequest);
     void delete(Long id);
-    InventoryTransaction getById(Long id);
-    List<InventoryTransaction> getAll();
-    List<InventoryTransaction> getByProductId(Long productId);
+    InventoryResponse getById(Long id);
+    List<InventoryResponse> getAll();
+    List<InventoryResponse> getByProductId(Long productId);
 }

@@ -1,13 +1,15 @@
 package com.distributed_order_system.distributed_order_system.User.service;
 
+import com.distributed_order_system.distributed_order_system.User.dto.UserCreateRequest;
+import com.distributed_order_system.distributed_order_system.User.dto.UserResponse;
+import com.distributed_order_system.distributed_order_system.User.dto.UserUpdateRequest;
+
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.User.entity.User;
-
 public interface UserService {
-    User create(User user);
-    User update(Long id, User user);
+    UserResponse create(UserCreateRequest userCreateRequest);
+    UserResponse update(Long id, UserUpdateRequest userUpdateRequest);
     void delete(Long id);
-    User getById(Long id);
-    List<User> getAll();
+    UserResponse getById(Long id);
+    List<UserResponse> getAll();
 }

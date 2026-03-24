@@ -1,36 +1,38 @@
 package com.distributed_order_system.distributed_order_system.User.service;
 
-import java.util.List;
-
+import com.distributed_order_system.distributed_order_system.User.dto.UserCreateRequest;
+import com.distributed_order_system.distributed_order_system.User.dto.UserResponse;
+import com.distributed_order_system.distributed_order_system.User.dto.UserUpdateRequest;
 import com.distributed_order_system.distributed_order_system.User.entity.User;
+import com.distributed_order_system.distributed_order_system.User.mapper.UserMapper;
 import com.distributed_order_system.distributed_order_system.User.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public UserResponse create(UserCreateRequest userCreateRequest) {
+        User user = userMapper.userCreateRequestToUser(userCreateRequest);
+        user.setRole("USER");
+        return userMapper.userToUserResponse(userRepository.save(user));
     }
 
     @Override
-    public User create(User user) {
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User update(Long id, User user) {
+    public UserResponse update(Long id, UserUpdateRequest userUpdateRequest) {
         User existing = userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        existing.setName(user.getName());
-        existing.setEmail(user.getEmail());
-        existing.setPassword(user.getPassword());
-        existing.setRole(user.getRole());
-        return userRepository.save(existing);
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        existing.setName(userUpdateRequest.getName());
+        existing.setPassword(userUpdateRequest.getPassword());
+        return userMapper.userToUserResponse(userRepository.save(existing));
     }
 
     @Override
@@ -39,13 +41,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) {
+    public UserResponse getById(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .map(userMapper::userToUserResponse)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponse> getAll() {
+        return userRepository.findAll().stream()
+                .map(userMapper::userToUserResponse)
+                .toList();
     }
 }

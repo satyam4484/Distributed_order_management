@@ -2,12 +2,12 @@ package com.distributed_order_system.distributed_order_system.Product.service;
 
 import java.util.List;
 
-import com.distributed_order_system.distributed_order_system.Product.entity.Product;
+import com.distributed_order_system.distributed_order_system.Product.dto.ProductDTO;
 
 public interface ProductService {
-    Product create(Product product);
-    Product update(Long id, Product product);
+    ProductDTO create(ProductDTO productDTO);
+    ProductDTO update(Long id, ProductDTO productDTO);
     void delete(Long id);
-    Product getById(Long id);
-    List<Product> getAll();
+    ProductDTO getById(Long id);
+    List<ProductDTO> getAll();
 }
