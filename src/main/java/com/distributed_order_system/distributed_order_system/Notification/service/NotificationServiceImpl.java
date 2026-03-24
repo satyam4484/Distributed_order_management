@@ -7,15 +7,13 @@ import com.distributed_order_system.distributed_order_system.Notification.reposi
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-
-    public NotificationServiceImpl(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
-    }
 
     @Override
     public Notification create(Notification notification) {

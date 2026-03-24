@@ -7,15 +7,13 @@ import com.distributed_order_system.distributed_order_system.Inventory.repositor
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class InventoryTransactionServiceImpl implements InventoryTransactionService {
 
     private final InventoryTransactionRepository repository;
-
-    public InventoryTransactionServiceImpl(InventoryTransactionRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public InventoryTransaction create(InventoryTransaction t) {

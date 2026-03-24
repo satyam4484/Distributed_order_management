@@ -4,18 +4,20 @@ import java.util.List;
 
 import com.distributed_order_system.distributed_order_system.Notification.entity.Notification;
 import com.distributed_order_system.distributed_order_system.Notification.service.NotificationService;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
 
-    public NotificationController(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
+    
 
     @PostMapping
     public ResponseEntity<Notification> create(@RequestBody Notification notification) {

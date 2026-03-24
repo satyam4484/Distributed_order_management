@@ -4,18 +4,19 @@ import java.util.List;
 
 import com.distributed_order_system.distributed_order_system.Inventory.entity.InventoryTransaction;
 import com.distributed_order_system.distributed_order_system.Inventory.service.InventoryTransactionService;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/inventory")
+@AllArgsConstructor
 public class InventoryTransactionController {
 
     private final InventoryTransactionService service;
 
-    public InventoryTransactionController(InventoryTransactionService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<InventoryTransaction> create(@RequestBody InventoryTransaction t) {
