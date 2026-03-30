@@ -11,6 +11,7 @@ import com.distributed_order_system.distributed_order_system.Notification.mapper
 import com.distributed_order_system.distributed_order_system.Notification.repository.NotificationRepository;
 import com.distributed_order_system.distributed_order_system.User.entity.User;
 import com.distributed_order_system.distributed_order_system.User.repository.UserRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,7 +36,6 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setType(notificationRequest.getType());
         notification.setStatus("SENT");
         notification.setSentAt(LocalDateTime.now());
-
         return mapper.toResponse(notificationRepository.save(notification));
     }
 
@@ -63,5 +63,15 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepository.findByUserId(userId).stream()
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
+    }
+    @Override
+    @Async
+    public void sendOrderNotification(Long userId, String message) {
+        NotificationRequest notificationRequest = new NotificationRequest();
+        notificationRequest.setUserId(userId);
+        notificationRequest.setMessage(message);
+        notificationRequest.setType("ORDER");
+
+        create(notificationRequest); 
     }
 }

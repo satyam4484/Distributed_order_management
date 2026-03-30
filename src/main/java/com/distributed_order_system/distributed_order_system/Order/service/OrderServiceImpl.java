@@ -1,5 +1,6 @@
 package com.distributed_order_system.distributed_order_system.Order.service;
 
+import com.distributed_order_system.distributed_order_system.Notification.service.NotificationService;
 import com.distributed_order_system.distributed_order_system.Order.dto.OrderCreateRequest;
 import com.distributed_order_system.distributed_order_system.Order.dto.OrderItemRequest;
 import com.distributed_order_system.distributed_order_system.Order.dto.OrderResponse;
@@ -32,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductService productService;
+    private final NotificationService notificationService;
     private final OrderMapper orderMapper;
 
     @Override
@@ -80,6 +82,13 @@ public class OrderServiceImpl implements OrderService {
         order.setPrice(totalPrice);
 
         orderRepository.save(order);
+
+        String message = String.format(
+                "Your order #%d totaling $%.2f has been placed successfully. Expected delivery: %s",
+                order.getId(),
+                order.getPrice(),
+                order.getCreatedAt().plusDays(5).toLocalDate());
+        notificationService.sendOrderNotification(user.getId(), message);
 
         return orderMapper.orderToOrderResponse(order);
     }

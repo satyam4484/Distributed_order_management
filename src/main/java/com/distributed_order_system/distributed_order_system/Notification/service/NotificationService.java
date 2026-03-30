@@ -11,4 +11,5 @@ public interface NotificationService {
     NotificationResponse getById(Long id);
     List<NotificationResponse> getAll();
     List<NotificationResponse> getByUserId(Long userId);
+    void sendOrderNotification(Long userId, String message);
 }
